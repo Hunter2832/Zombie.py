@@ -1,0 +1,62 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def rhs(S, I, D, x, delta, mu, alpha, epsilon, time):
+    suceptable = [S]
+    infected = [I]
+    dead = [D]
+    
+    for i in range(time):
+        if(i < 2):
+            mu = 0
+        else:
+            mu = .01
+        SI = S*I
+        NewSuceptable = (x*S) - (delta * S) + (mu*SI) - (alpha*SI)
+        NewInfected = (alpha*SI) - (mu*SI) - (epsilon*I)
+        NewDead = delta* S + epsilon*I
+
+        S += NewSuceptable
+        I += NewInfected
+        D += NewDead
+        print(str(S) + " " + str(I)+ " " + str(D) + "\n")
+        S = max(S,0)
+        I = max(I,0)
+        D = max(D,0)
+
+        suceptable.append(S)
+        infected.append(I)
+        dead.append(D)
+
+    return suceptable, infected, dead
+
+
+
+S0 = 100
+I0 = 10
+D0 = 0
+
+x = .018
+delta = .0077
+mu = .01
+alpha = .0095
+epsilon = .005
+time = 50
+
+S, I, D = rhs(S0, I0, D0, x, delta, mu, alpha, epsilon, time)
+time_steps = list(range(time + 1))
+
+
+plt.plot(time_steps, S, label='Susceptible')
+plt.plot(time_steps, I, label='Infected')
+plt.plot(time_steps, D, label='Dead')
+plt.title('Population Dynamics Over Time')
+plt.xlabel('Time')
+plt.ylabel('Population')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+        
+    
